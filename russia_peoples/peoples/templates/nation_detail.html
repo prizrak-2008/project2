@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ nation.name }} - Народы России</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Карточка народа */
+        .nation-card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Шапка с флагом */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .flag {
+            font-size: 120px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Навигация по кнопкам */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 30px 30px 0 30px;
+            background: white;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            background: #f0f2f5;
+            color: #333;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        /* Контент вкладок */
+        .tab-content {
+            padding: 30px;
+            background: white;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Галерея фото */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Видео блок */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        /* Текстовые блоки */
+        .text-block {
+            line-height: 1.8;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .text-block h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .text-block p {
+            margin-bottom: 20px;
+        }
+
+        /* Кнопка назад */
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        /* Адаптив под телефон */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+            
+            .flag {
+                font-size: 80px;
+            }
+            
+            .nav-buttons {
+                padding: 20px 20px 0 20px;
+            }
+            
+            .tab-btn {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .text-block {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nation-card">
+            <!-- Шапка с флагом -->
+            <div class="header">
+                <div class="flag">{{ nation.flag_emoji }}</div>
+                <h1>{{ nation.name }}</h1>
+            </div>
+
+            <!-- Кнопки вкладок -->
+            <div class="nav-buttons">
+                <button class="tab-btn active" onclick="openTab(event, 'history')">📖 История</button>
+                <button class="tab-btn" onclick="openTab(event, 'language')">🗣️ Язык</button>
+                <button class="tab-btn" onclick="openTab(event, 'gallery')">📸 Фото</button>
+                <button class="tab-btn" onclick="openTab(event, 'video')">🎬 Видео</button>
+            </div>
+
+            <!-- Контент -->
+            <div class="tab-content">
+                <!-- Вкладка История -->
+                <div id="history" class="tab-pane active">
+                    <div class="text-block">
+                        <h3>📜 История народа {{ nation.name }}</h3>
+                        <p>{{ nation.history_text|linebreaks }}</p>
+                    </div>
+                </div>
+
+                <!-- Вкладка Язык -->
+                <div id="language" class="tab-pane">
+                    <div class="text-block">
+                        <h3>🗣️ Особенности языка {{ nation.name }}</h3>
+                        <p>{{ nation.language_features|linebreaks }}</p>
+                        {% if nation.audio_file %}
+                        <div style="margin-top: 30px;">
+                            <h4>🎵 Пример звучания:</h4>
+                            <audio controls style="width: 100%; margin-top: 10px;">
+                                <source src="{{ nation.audio_file.url }}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио
+                            </audio>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Вкладка Фото -->
+                <div id="gallery" class="tab-pane">
+                    <h3>📸 Фотогалерея</h3>
+                    <div class="gallery">
+                        {% if nation.photo1 %}
+                        <div class="gallery-item">
+                            <img src="{{ nation.photo1.url }}" alt="Фото {{ nation.name }}">
+                        </div>
+                        {% endif %}
+                        {% if nation.photo2 %}
+                        <div class="gallery-item">
+                            <img src="{{ nation.photo2.url }}" alt="Фото {{ nation.name }}">
+                        </div>
+                        {% endif %}
+                        {% if nation.photo3 %}
+                        <div class="gallery-item">
+                            <img src="{{ nation.photo3.url }}" alt="Фото {{ nation.name }}">
+                        </div>
+                        {% endif %}
+                        {% if not nation.photo1 and not nation.photo2 and not nation.photo3 %}
+                        <p style="text-align: center; color: #999;">Фото пока не добавлены в админке</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Вкладка Видео -->
+                <div id="video" class="tab-pane">
+                    <h3>🎬 Видео о народе {{ nation.name }}</h3>
+                    {% if nation.video_url %}
+                    <div class="video-container">
+                        {% if 'youtube.com' in nation.video_url or 'youtu.be' in nation.video_url %}
+                            <!-- Конвертируем YouTube ссылку в embed -->
+                            {% if 'youtu.be' in nation.video_url %}
+                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|slice:'-11:' }}" 
+                                        frameborder="0" allowfullscreen></iframe>
+                            {% elif 'watch?v=' in nation.video_url %}
+                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|cut:'https://www.youtube.com/watch?v=' }}" 
+                                        frameborder="0" allowfullscreen></iframe>
+                            {% else %}
+                                <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
+                            {% endif %}
+                        {% else %}
+                            <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: #999; padding: 40px;">Видео пока не добавлено в админке</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Кнопка назад -->
+            <div style="padding: 0 30px 30px 30px;">
+                <a href="/" class="back-btn">← На главную</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция переключения вкладок
+        function openTab(event, tabId) {
+            // Скрываем все вкладки
+            var tabPanes = document.getElementsByClassName('tab-pane');
+            for (var i = 0; i < tabPanes.length; i++) {
+                tabPanes[i].classList.remove('active');
+            }
+            
+            // Убираем активный класс у всех кнопок
+            var tabBtns = document.getElementsByClassName('tab-btn');
+            for (var i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove('active');
+            }
+            
+            // Показываем выбранную вкладку
+            document.getElementById(tabId).classList.add('active');
+            
+            // Делаем активной нажатую кнопку
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+    {% include 'footer.html' %}
+</body>
+</html>

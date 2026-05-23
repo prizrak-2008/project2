@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Народы России - Культурное наследие</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка с эффектом */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "🇷🇺";
+            font-size: 300px;
+            position: absolute;
+            opacity: 0.1;
+            bottom: -50px;
+            right: -50px;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Контейнер для карточек */
+        .container {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Сетка карточек */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Карточка народа - яркая с анимацией */
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Верхняя часть карточки с флагом */
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header .flag {
+            font-size: 80px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-header .flag {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Декоративные круги */
+        .card-header::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -75px;
+            right: -75px;
+        }
+
+        .card-header::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        /* Тело карточки */
+        .card-body {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .card-body h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-body .short-desc {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Кнопка "Узнать больше" */
+        .card-footer {
+            padding: 0 25px 25px 25px;
+            text-align: center;
+        }
+
+        .learn-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .learn-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .card-body h3 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Яркая шапка -->
+    <div class="hero">
+        <h1>Народы России</h1>
+        <p>Многообразие культур, традиций и языков — наше общее богатство</p>
+    </div>
+
+    <!-- Контент -->
+    <div class="container">
+        <div class="grid">
+            {% for nation in nations %}
+            <div class="card" onclick="location.href='/{{ nation.id }}/'">
+                <div class="card-header">
+                    <div class="flag">{{ nation.flag_emoji }}</div>
+                </div>
+                <div class="card-body">
+                    <h3>{{ nation.name }}</h3>
+                    {% if nation.short_description %}
+                    <p class="short-desc">{{ nation.short_description|truncatechars:80 }}</p>
+                    {% else %}
+                    <p class="short-desc">Уникальная культура и богатая история</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <span class="learn-btn">Узнать больше →</span>
+                </div>
+            </div>
+            {% empty %}
+            <div style="text-align: center; grid-column: 1/-1; padding: 60px;">
+                <h3>Народы пока не добавлены</h3>
+                <p>Зайдите в админку и добавьте первый народ</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ - будет добавлен ниже -->
+    {% include 'footer.html' %}
+</body>
+</html>
