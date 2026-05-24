@@ -21,8 +21,24 @@ class Nation(models.Model):
     photo3 = models.ImageField(upload_to='peoples/photos/', blank=True, null=True, verbose_name="Фото 3")
     
     # Видео (YouTube или любое другое)
-    video_url = models.URLField(blank=True, verbose_name="Ссылка на видео", 
-                                help_text="Вставьте ссылку на YouTube или Vimeo")
+    VIDEO_HOST_CHOICES = [
+        ('vk', 'ВКонтакте'),
+        ('rutube', 'RUTUBE'),
+    ]
+    video_host = models.CharField(
+        max_length=20,
+        choices=VIDEO_HOST_CHOICES,
+        default='rutube',
+        verbose_name="Видеохостинг",
+        help_text="Выберите где разместить видео"
+    )
+
+    video_url = models.URLField(blank=True, verbose_name="Ссылка на видео")
+    video_embed_code=models.TextField(
+        blank=True,
+        verbose_name="Код для вставки (Для вк)",
+        help_text="Для ВКонтакте: скопируйте embed код из видео"
+    )
     
     # Дополнительно: аудио (если захочешь)
     audio_file = models.FileField(upload_to='peoples/audio/', blank=True, null=True, verbose_name="Аудио (песня/речь)")

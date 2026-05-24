@@ -280,29 +280,46 @@
 
                 <!-- Вкладка Видео -->
                 <div id="video" class="tab-pane">
-                    <h3>🎬 Видео о народе {{ nation.name }}</h3>
-                    {% if nation.video_url %}
+                    <h3>Видео о народе {{ nation.name }}</h3>
                     <div class="video-container">
-                        {% if 'youtube.com' in nation.video_url or 'youtu.be' in nation.video_url %}
-                            <!-- Конвертируем YouTube ссылку в embed -->
+                        {% if nation.video_host == 'vk' and nation.video_embed_code %}
+                            <!-- ВКонтакте видео (используем embed код) -->
+                            {{ nation.video_embed_code|safe }}
+                        {% elif nation.video_host == 'rutube' and nation.video_url %}
+                            <!-- RUTUBE видео -->
+                            {% if 'rutube.ru' in nation.video_url %}
+                                {% if 'embed' in nation.video_url %}
+                                    <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
+                                {% else %}
+                                    {% with video_id=nation.video_url|cut:'https://rutube.ru/video/'|cut:'/' %}
+                                        <iframe src="https://rutube.ru/play/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+                                    {% endwith %}
+                                {% endif %}
+                            {% else %}
+                                <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
+                            {% endif %}
+                        {% elif nation.video_host == 'youtube' and nation.video_url %}
+                            <!-- YouTube видео (если вдруг понадобится) -->
                             {% if 'youtu.be' in nation.video_url %}
-                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|slice:'-11:' }}" 
-                                        frameborder="0" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|slice:'-11:' }}" frameborder="0" allowfullscreen></iframe>
                             {% elif 'watch?v=' in nation.video_url %}
-                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|cut:'https://www.youtube.com/watch?v=' }}" 
-                                        frameborder="0" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/{{ nation.video_url|cut:'https://www.youtube.com/watch?v=' }}" frameborder="0" allowfullscreen></iframe>
                             {% else %}
                                 <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
                             {% endif %}
                         {% else %}
-                            <iframe src="{{ nation.video_url }}" frameborder="0" allowfullscreen></iframe>
+                            <p style="text-align: center; color: #999; padding: 40px;">
+                                Видео пока не добавлено. Скоро здесь появится интересный материал!
+                            </p>
                         {% endif %}
                     </div>
-                    {% else %}
-                    <p style="text-align: center; color: #999; padding: 40px;">Видео пока не добавлено в админке</p>
+                    
+                    {% if nation.video_host == 'vk' and not nation.video_embed_code %}
+                    <p style="color: #ff6b6b; margin-top: 10px; text-align: center;">
+                        ⚠️ Для видео ВКонтакте нужно добавить embed код в админке
+                    </p>
                     {% endif %}
                 </div>
-            </div>
 
             <!-- Кнопка назад -->
             <div style="padding: 0 30px 30px 30px;">
