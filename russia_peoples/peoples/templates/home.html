@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Народы России - Культурное наследие</title>
     <style>
-        * {
+              * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -79,19 +79,21 @@
         /* Контейнер для карточек */
         .container {
             flex: 1;
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
+            margin: 0;
             padding: 40px 20px;
         }
 
-        /* Сетка карточек */
+        /* Сетка - карточки всегда по центру */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;  /* ВСЕГДА ПО ЦЕНТРУ */
             gap: 30px;
+            width: 100%;
         }
 
-        /* Карточка народа - яркая с анимацией */
+        /* Карточка - фиксированная ширина */
         .card {
             background: white;
             border-radius: 20px;
@@ -100,6 +102,8 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
+            width: 320px;  /* Фиксированная ширина */
+            flex-shrink: 0;
         }
 
         .card:hover {
@@ -189,7 +193,7 @@
             box-shadow: 0 5px 15px rgba(102,126,234,0.4);
         }
 
-        /* Адаптив */
+        /* Адаптив для телефонов */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 36px;
@@ -199,13 +203,33 @@
                 font-size: 16px;
             }
             
+            .container {
+                padding: 20px 15px;
+            }
+            
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 20px;
+            }
+            
+            .card {
+                width: 100%;  /* На телефонах карточки на всю ширину */
+                max-width: 350px;
             }
             
             .card-body h3 {
                 font-size: 24px;
+            }
+            
+            .card-header .flag {
+                font-size: 60px;
+            }
+        }
+        
+        /* На маленьких ноутбуках - 2 карточки по центру */
+        @media (min-width: 769px) and (max-width: 1000px) {
+            .grid {
+                max-width: 700px;
+                margin: 0 auto;
             }
         }
     </style>
